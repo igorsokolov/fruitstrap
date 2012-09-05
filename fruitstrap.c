@@ -14,7 +14,7 @@
 #define PREP_CMDS_PATH "/tmp/fruitstrap-gdb-prep-cmds"
 #define GDB_SHELL      "`xcode-select -print-path`/Platforms/iPhoneOS.platform/Developer/usr/libexec/gdb/gdb-arm-apple-darwin --arch armv7f -i mi -q -x " PREP_CMDS_PATH
 
-#define PRINT(...) if (!quiet) printf(__VA_ARGS__)
+#define PRINT(...) if (!quiet) { printf(__VA_ARGS__); fflush(stdout); }
 
 // approximation of what Xcode does:
 #define GDB_PREP_CMDS CFSTR("set mi-show-protections off\n\
@@ -456,6 +456,7 @@ void read_dir(service_conn_t afcFd, afc_connection* afc_conn_p, const char* dir)
     }
 
     printf("%s\n", dir);
+    fflush(stdout);
 
     afc_dictionary afc_dict;
     afc_dictionary* afc_dict_p = &afc_dict;
@@ -720,6 +721,7 @@ void handle_device(AMDeviceRef device) {
     } else {
         if (operation == OP_LIST_DEVICES) {
             printf ("%s\n", CFStringGetCStringPtr(found_device_id, CFStringGetSystemEncoding()));
+            fflush(stdout);
             return;
         }
         found_device = true;
@@ -796,6 +798,7 @@ void usage(const char* app) {
     printf ("      none are specified. \n\n");
     printf ("   list-devices  \n");
     printf ("    * List all attached devices. \n\n");
+    fflush(stdout);
 }
 
 bool args_are_valid() {
